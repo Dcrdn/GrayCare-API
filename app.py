@@ -282,5 +282,21 @@ def getSleep():
     return jsonify(res)
 
 
+@app.route("/getMotionless")
+def getMotionless():
+    current=0
+    data=[]
+    motion=HistoricMotionless.query.all()
+
+    for i in range(len(motion)-1, -1, -1):
+        s=motion[i].serialize()
+        if(i==len(motion)-1):
+            current=s["motionlessTime"]
+        data.append(int(s["motionlessTime"]))
+        
+    res={"value": current+" hr", "data":data}
+    return jsonify(res)
+
+
 if __name__ == '__main__':
     app.run()
