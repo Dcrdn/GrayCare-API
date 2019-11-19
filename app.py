@@ -267,5 +267,20 @@ def getStress():
     res={"value": current, "data":data}
     return jsonify(res)
 
+@app.route("/getSleep")
+def getSleep():
+    current=0
+    data=[]
+    sleep=Sleep.query.all()
+
+    for i in range(len(sleep)-1, -1, -1):
+        s=sleep[i].serialize()
+        if(i==len(sleep)-1):
+            current=int(s["sleepTime"])
+        data.append(int(s["sleepTime"]))
+    res={"value": current, "data":data}
+    return jsonify(res)
+
+
 if __name__ == '__main__':
     app.run()
