@@ -253,7 +253,7 @@ def getHeartRate():
         hrQty.append(iH["currentHeartRate"])
         break
     res={"value": hrQty[0], "data":hhrQty}
-    return json.dumps(res)
+    return jsonify(res)
 
 @app.route("/getStress")
 def getStress():
@@ -267,7 +267,7 @@ def getStress():
             current=int(s["stressLevel"])
         data.append(int(s["stressLevel"]))
     res={"value": current, "data":data}
-    return json.dumps(res)
+    return jsonify(res)
 
 @app.route("/getSleep")
 def getSleep():
@@ -281,7 +281,7 @@ def getSleep():
             current=s["sleepTime"]
         data.append(int(s["sleepTime"]))
     res={"value": current+" hr", "data":data}
-    return json.dumps(res)
+    return jsonify(res)
 
 
 @app.route("/getMotionless")
@@ -297,7 +297,7 @@ def getMotionless():
         data.append(int(s["motionlessTime"]))
 
     res={"value": current+" hr", "data":data}
-    return json.dumps(res)
+    return jsonify(res)
 
 
 if __name__ == '__main__':
