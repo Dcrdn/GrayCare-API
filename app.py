@@ -253,5 +253,19 @@ def getHeartRate():
     res={"value": hrQty[0], "data":hhrQty}
     return jsonify(res)
 
+@app.route("/getStress")
+def getStress():
+    current=0
+    data=[]
+    stress=HistoricStress.query.all()
+
+    for i in range(len(stress)-1, -1, -1):
+        s=stress[i].serialize()
+        if(i==len(stress)-1):
+            current=int(s["stressLevel"])
+        data.append(int(s["stressLevel"]))
+    res={"value": current, "data":data}
+    return jsonify(res)
+
 if __name__ == '__main__':
     app.run()
