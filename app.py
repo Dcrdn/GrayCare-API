@@ -276,9 +276,9 @@ def getSleep():
     for i in range(len(sleep)-1, -1, -1):
         s=sleep[i].serialize()
         if(i==len(sleep)-1):
-            current=int(s["sleepTime"])
+            current=s["sleepTime"]
         data.append(int(s["sleepTime"]))
-    res={"value": current, "data":data}
+    res={"value": current+" hr", "data":data}
     return jsonify(res)
 
 
