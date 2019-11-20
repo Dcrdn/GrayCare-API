@@ -299,6 +299,25 @@ def getMotionless():
     res={"value": current+" hr", "data":data}
     return json.dumps(res)
 
+@app.route("/getExercise")
+def getExercise():
+
+    current=0
+    dataCurrent=[]
+    dataPast=[]
+
+    motion=Exercise.query.all()
+    size=len(motion)//2
+    for i in range(0, size):
+        s=motion[i].serialize()
+        dataPast.append(int(s["exerciseTime"]))
+    for i in range(size, len(motion)):
+        s=motion[i].serialize()
+        dataCurrent.append(int(s["exerciseTime"]))
+    if(len(dataPast)<len(dataCurrent)):
+        dataPast.append(dataPast[-1])
+    res={"dataPast":dataPast, "dataCurrent":dataCurrent}
+    return json.dumps(res)
 
 if __name__ == '__main__':
     app.run()
