@@ -247,7 +247,7 @@ def getHeartRate():
     for i in range(len(hhr)-1, -1, -1):
         iH=hhr[i].serialize()
         print(iH)
-        hhrQty.append(iH["heartRate"])
+        hhrQty.append(int(iH["heartRate"]))
     for i in range(len(hr)-1, -1, -1):
         iH=hr[i].serialize()
         hrQty.append(iH["currentHeartRate"])
