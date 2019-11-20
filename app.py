@@ -319,5 +319,29 @@ def getExercise():
     res={"dataPast":dataPast, "dataCurrent":dataCurrent}
     return json.dumps(res)
 
+
+@app.route("/getMood")
+def getMood():
+
+    current=0
+    data=[]
+    motion=Mood.query.all()
+    s=motion[0].serialize()
+    suma=int(s["happy"])+int(s["sad"])+int(s["neutro"])
+    q=(100*int(s["happy"]))/suma
+    a = "%.2f" % q
+    a=float(a)
+    data.append(a)
+    q=(100*int(s["sad"]))/suma
+    a = "%.2f" % q
+    a=float(a)
+    data.append(a)
+    q=(100*int(s["neutro"]))/suma
+    a = "%.2f" % q
+    a=float(a)
+    data.append(a)
+    res={"data":data}
+    return json.dumps(res)
+
 if __name__ == '__main__':
     app.run()
