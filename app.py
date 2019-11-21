@@ -1,5 +1,6 @@
 import os
 import json
+import random
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -202,8 +203,9 @@ def generateDB():
             for s in sleep:
                 print(agregarSleep(s["idPersona"],s["sleepTime"],s["date"]))
 
-            for s in exercise:
-                print(agregarExercise(s["idPersona"],s["exerciseTime"],s["date"]))
+            for s in range(0,60):
+                exTime=random.randint(4000,10000)
+                print(agregarExercise(1,exTime,1))
 
             for s in mood:
                 print(agregarMood(s["idPersona"],s["happy"],s["sad"],s["neutro"]))
@@ -289,36 +291,38 @@ def getExercise():
     dataPast=[]
 
     motion=Exercise.query.all()
-    size=len(motion)//2
-    for i in range(0, size):
-        s=motion[i].serialize()
-        dataPast.append(int(s["exerciseTime"]))
-    for i in range(size, len(motion)):
-        s=motion[i].serialize()
-        dataCurrent.append(int(s["exerciseTime"]))
-    if(len(dataPast)<len(dataCurrent)):
-        dataPast.append(dataPast[-1])
-    res={"dataPast":dataPast, "dataCurrent":dataCurrent}
+    if(len(motion)<60):
+        size=len(motion)//2
+        for i in range(0, size):
+            s=motion[i].serialize()
+            dataPast.append(int(s["exerciseTime"]))
+        for i in range(size, len(motion)):
+            s=motion[i].serialize()
+            dataCurrent.append(int(s["exerciseTime"]))
+        if(len(dataPast)<len(dataCurrent)):
+            dataPast.append(dataPast[-1])
+        res={"dataPast":dataPast, "dataCurrent":dataCurrent}
+    else:
+        stop=len(motion)-31
+        for i in range(len(motion)-1, stop-1, -1):
+            s=motion[i].serialize()
+            dataCurrent.append(int(s["exerciseTime"]))
+        for i in range(stop, stop-31, -1):
+            s=motion[i].serialize()
+            dataPast.append(int(s["exerciseTime"]))
+        res={"dataPast": dataPast, "dataCurrent":dataCurrent}
     return json.dumps(res)
 
 @app.route("/getPasos")
 def getPasos():
-
     current=0
     dataCurrent=[]
     dataPast=[]
-
     motion=Exercise.query.all()
     size=len(motion)//2
-    for i in range(0, size):
-        s=motion[i].serialize()
-        dataPast.append(int(s["exerciseTime"]))
-    for i in range(size, len(motion)):
-        s=motion[i].serialize()
-        dataCurrent.append(int(s["exerciseTime"]))
-    if(len(dataPast)<len(dataCurrent)):
-        dataPast.append(dataPast[-1])
-    res={"data":dataCurrent[-1]}
+    s=motion[-1].serialize()
+    r=int(s["exerciseTime"])
+    res={"data":r}
     return json.dumps(res)
 
 
@@ -362,6 +366,24 @@ def sendExercise():
     hr=dic["data"]    
     print(agregarExercise(1, str(hr), "1"))
     res={"data":"success"}
+    return json.dumps(res)
+
+
+@app.route("/deleteEverything")
+def deleteEverything():
+    User.query.delete()
+    Familiar.query.delete()
+    Persona.query.delete()
+    HeartRate.query.delete()
+    HistoricHeartRate.query.delete()
+    Stress.query.delete()
+    HistoricStress.query.delete()
+    Motionless.query.delete()
+    HistoricMotionless.query.delete()
+    Sleep.query.delete()
+    Exercise.query.delete()
+    Mood.query.delete()
+    res={"borrado":"success"}
     return json.dumps(res)
 
 
