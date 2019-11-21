@@ -215,21 +215,6 @@ def generateDB():
 def hello():
     return "Hello World!"
 
-@app.route("/add")
-def add_book():
-    user=request.args.get('user')
-    password=request.args.get('password')
-    try:
-        user=User(
-            user=user,
-            password=password
-        )
-        db.session.add(user)
-        db.session.commit()
-        return "User added. user id={}".format(user.id)
-    except Exception as e:
-	    return(str(e))
-
 @app.route("/generateDB")
 def genDB():
     success=generateDB()
@@ -243,16 +228,13 @@ def getHeartRate():
     hr=HeartRate.query.all()
     hhr=HistoricHeartRate.query.all()
     hhrQty=[]
-    hrQty=[]
     for i in range(len(hhr)-1, -1, -1):
         iH=hhr[i].serialize()
         print(iH)
         hhrQty.append(int(iH["heartRate"]))
-    for i in range(len(hr)-1, -1, -1):
-        iH=hr[i].serialize()
-        hrQty.append(iH["currentHeartRate"])
-        break
-    res={"value": hrQty[0], "data":hhrQty}
+
+    
+    res={"value": hhrQty[0], "data":hhrQty}
     return json.dumps(res)
 
 @app.route("/getStress")
@@ -341,6 +323,17 @@ def getMood():
     a=float(a)
     data.append(a)
     res={"data":data}
+    return json.dumps(res)
+
+@app.route("/sendHeartRate", methods = ['POST'])
+def sendHeartRate():
+    print("que pedo")
+    dic = json.loads(request.get_data())
+    print(dic)
+    hr=dic["data"]
+    print("por agregar: "+ str(hr))
+    print(agregarHRR(1, str(hr), "1"))
+    res={"data":"success"}
     return json.dumps(res)
 
 if __name__ == '__main__':
