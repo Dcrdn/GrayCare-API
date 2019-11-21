@@ -386,6 +386,29 @@ def deleteEverything():
     res={"borrado":"success"}
     return json.dumps(res)
 
+@app.route("/getProfile")
+def getProfile():
+    res={"firstName":"Sandra",
+    "lastName":"Alcaraz",
+    "email":"sandra@gmail.com",
+    "password":"sandra",
+    "address":"Calle ITESM",
+    "city":"sandra@gmail.com",
+    "state":"Jalisco",
+    "zip":"45418"
+    }
+    return json.dumps(res)
+
 
 if __name__ == '__main__':
     app.run()
+"""
+        firstName: "Sandra",
+        lastName: "Alcaraz",
+        email: "sandra@gmail.com",
+        password: "sandra",
+        address: "1234 Main St.",
+        city: "",
+        state: "",
+        zip: ""
+"""
