@@ -1,15 +1,37 @@
 from app import db
-
+"""
+        firstName: "Sandra",
+        lastName: "Alcaraz",
+        email: "sandra@gmail.com",
+        password: "sandra",
+        address: "1234 Main St.",
+        city: "",
+        state: "",
+        zip: ""
+"""
 class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String())
+    firstName = db.Column(db.String())
+    lastName = db.Column(db.String())
+    email = db.Column(db.String())
     password = db.Column(db.String())
+    address = db.Column(db.String())
+    city = db.Column(db.String())
+    state = db.Column(db.String())
+    cp = db.Column(db.String())
 
-    def __init__(self, user, password):
-        self.user = user
+    def __init__(self, firstName, lastName, email, password, address, city, state, cp):
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
         self.password = password
+        self.address = address
+        self.city = state
+        self.state = state
+        self.cp = cp
+
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -17,8 +39,14 @@ class User(db.Model):
     def serialize(self):
         return {
             'id': self.id, 
-            'user': self.user,
+            'firstName': self.firstName,
+            'lastName': self.lastName,
+            'email': self.email,
             'password': self.password,
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip': self.cp
         }
 
 class Familiar(db.Model):

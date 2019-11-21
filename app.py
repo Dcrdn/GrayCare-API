@@ -14,6 +14,24 @@ db = SQLAlchemy(app)
 
 from models import User, Familiar, Persona, HeartRate, HistoricHeartRate, Stress, HistoricStress, Motionless, HistoricMotionless, Sleep, Exercise, Mood
 
+def agregarUser(firstName, lastName, email, password, address, city, state, cp):
+    try:
+        familiar=User(
+            firstName=firstName,
+            lastName=lastName, 
+            email=lastName, 
+            password=password, 
+            address=address, 
+            city=city, 
+            state=state, 
+            cp=cp
+        )
+        db.session.add(familiar)
+        db.session.commit()
+        return "User added. user id={}".format(familiar.id)
+    except Exception as e:
+        return(str(e))
+
 def agregarFamiliar(idPersona, user, password):
     try:
         familiar=Familiar(
@@ -209,6 +227,7 @@ def generateDB():
 
             for s in mood:
                 print(agregarMood(s["idPersona"],s["happy"],s["sad"],s["neutro"]))
+            print(agregarUser("Sandra", "Alcaraz", "sandra@gmail.com", "sandra", "Calle ITESM", "Zapopan", "Jalisco", "45418"))
             return True
         except Exception as e:
             return False
@@ -368,6 +387,21 @@ def sendExercise():
     res={"data":"success"}
     return json.dumps(res)
 
+@app.route("/updateProfile", methods = ['POST'])
+def updateProfile():
+    dic = json.loads(request.get_data())
+    firstName=dic["firstName"]
+    lastName=dic["lastName"]    
+    email=dic["email"]    
+    password=dic["password"]    
+    address=dic["address"]    
+    city=dic["city"]    
+    state=dic["state"]    
+    cp=dic["zip"]    
+    print(agregarUser(firstName, lastName, email, password, address, city, state, cp))
+    res={"data":"success"}
+    return json.dumps(res)
+
 
 @app.route("/deleteEverything")
 def deleteEverything():
@@ -388,15 +422,8 @@ def deleteEverything():
 
 @app.route("/getProfile")
 def getProfile():
-    res={"firstName":"Sandra",
-    "lastName":"Alcaraz",
-    "email":"sandra@gmail.com",
-    "password":"sandra",
-    "address":"Calle ITESM",
-    "city":"sandra@gmail.com",
-    "state":"Jalisco",
-    "zip":"45418"
-    }
+    motion=User.query.all()
+    res=motion[-1].serialize()
     return json.dumps(res)
 
 
