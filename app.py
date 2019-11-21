@@ -301,6 +301,26 @@ def getExercise():
     res={"dataPast":dataPast, "dataCurrent":dataCurrent}
     return json.dumps(res)
 
+@app.route("/getPasos")
+def getPasos():
+
+    current=0
+    dataCurrent=[]
+    dataPast=[]
+
+    motion=Exercise.query.all()
+    size=len(motion)//2
+    for i in range(0, size):
+        s=motion[i].serialize()
+        dataPast.append(int(s["exerciseTime"]))
+    for i in range(size, len(motion)):
+        s=motion[i].serialize()
+        dataCurrent.append(int(s["exerciseTime"]))
+    if(len(dataPast)<len(dataCurrent)):
+        dataPast.append(dataPast[-1])
+    res={"data":dataCurrent[-1]}
+    return json.dumps(res)
+
 
 @app.route("/getMood")
 def getMood():
@@ -335,6 +355,15 @@ def sendHeartRate():
     print(agregarHRR(1, str(hr), "1"))
     res={"data":"success"}
     return json.dumps(res)
+
+@app.route("/sendExercise", methods = ['POST'])
+def sendExercise():
+    dic = json.loads(request.get_data())
+    hr=dic["data"]    
+    print(agregarExercise(1, str(hr), "1"))
+    res={"data":"success"}
+    return json.dumps(res)
+
 
 if __name__ == '__main__':
     app.run()
